@@ -39,7 +39,7 @@ public class EyesWatcher
     eyes.setIsDisabled(APPLITOOLS_KEY == null);
 
     if (!eyes.getIsDisabled()) {
-      String buildNumber = System.getenv("build.number");
+      String buildNumber = System.getenv("BUILD_NUMBER");
       batch = new BatchInfo(localBranchName + (buildNumber != null ? " #" + buildNumber : " " + dateFormat.format(new Date())));
 
       // Aggregates tests under the same batch when tests are run in different processes (e.g. split tests in bamboo).
