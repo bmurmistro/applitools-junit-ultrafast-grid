@@ -32,14 +32,14 @@ public class EyesWatcher
   private static DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
   static {
-    String localBranchName = System.getProperty("branchName", System.getenv("teamcity.build.vcs.branch"));
+    String localBranchName = System.getProperty("branchName", System.getProperty("teamcity.build.vcs.branch"));
     if (localBranchName == null) {
       localBranchName = "default";
     }
     eyes.setIsDisabled(APPLITOOLS_KEY == null);
 
     if (!eyes.getIsDisabled()) {
-      String buildNumber = System.getenv("build.vcs.number");
+      String buildNumber = System.getProperty("build.vcs.number");
       batch = new BatchInfo(localBranchName + (buildNumber != null ? " #" + buildNumber : " " + dateFormat.format(new Date())));
 
       // Aggregates tests under the same batch when tests are run in different processes (e.g. split tests in bamboo).
