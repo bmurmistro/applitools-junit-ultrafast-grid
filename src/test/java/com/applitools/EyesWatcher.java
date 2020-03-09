@@ -60,7 +60,7 @@ public class EyesWatcher
       //eyes.setBranchName(localBranchName);
 
       // set the default parent branch to master if the parent branch is not specified
-      eyes.setParentBranchName(System.getProperty("parentBranchName", "default"));
+      eyes.setParentBranchName(System.getProperty("parentBranchName", "bmurmistro/applitools-teamcity/master"));
 
       eyes.setIgnoreCaret(true);
     }

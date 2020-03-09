@@ -11,7 +11,7 @@ public class LoginTest
 {
   @Test
   public void testLogin() {
-    open("http://demo.applitools.com/loginBefore.html");
+    open("http://demo.applitools.com/loginAfter.html");
 
     eyesWatcher.eyesCheck();
   }
