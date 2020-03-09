@@ -32,7 +32,7 @@ public class EyesWatcher
   private static DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
   static {
-    String localBranchName = System.getProperty("branchName", System.getenv("APPLITOOLS_BATCH_NAME"));
+    String localBranchName = System.getProperty("branchName", System.getenv("GIT_BRANCH_NAME"));
     if (localBranchName == null) {
       localBranchName = "default";
     }
@@ -60,8 +60,15 @@ public class EyesWatcher
       //eyes.setBranchName(localBranchName);
 
       // set the default parent branch to master if the parent branch is not specified
-      eyes.setParentBranchName(System.getProperty("parentBranchName", "default"));
-
+      //eyes.setParentBranchName(System.getProperty("parentBranchName", "bmurmistro/applitools-teamcity/master"));
+      // For local testing or ci runs with master set the branchName and parentBranchName
+System.out.println("batch ***********" + batchId);
+System.out.println("branch name ***********" + localBranchName);
+      if ((batchId != null && "master".equalsIgnoreCase(localBranchName)) || batchId == null) {
+        eyes.setBranchName(
+            localBranchName.equalsIgnoreCase("master") ? "bmurmistro/applitools-teamcity/master" : localBranchName);
+        eyes.setParentBranchName(System.getProperty("parentBranchName", "bmurmistro/applitools-teamcity/master"));
+      }
       eyes.setIgnoreCaret(true);
     }
     eyes.setLogHandler(new FileLogger("/Users/brandonmurray/dev/applitools/bmurmistro/applitools.log",false,true));
