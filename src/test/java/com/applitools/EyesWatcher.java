@@ -32,7 +32,7 @@ public class EyesWatcher
   private static DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
   static {
-    String localBranchName = System.getProperty("branchName", System.getProperty("teamcity.build.vcs.branch"));
+    String localBranchName = System.getProperty("branchName", System.getenv("APPLITOOLS_BATCH_NAME"));
     if (localBranchName == null) {
       localBranchName = "default";
     }
@@ -40,8 +40,7 @@ public class EyesWatcher
 
     if (!eyes.getIsDisabled()) {
       String buildNumber = System.getenv("BUILD_NUMBER");
-      BatchInfo batchInfo = new BatchInfo(System.getenv("APPLITOOLS_BATCH_NAME"));
-      //BatchInfo batchInfo = new BatchInfo(localBranchName + (buildNumber != null ? " #" + buildNumber : " " + dateFormat.format(new Date())));
+      BatchInfo batchInfo = new BatchInfo((buildNumber != null ? " #" + buildNumber : " " + dateFormat.format(new Date())));
 
       // If the test runs via TeamCity, set the batch ID accordingly.
       String batchId = System.getenv("APPLITOOLS_BATCH_ID");
