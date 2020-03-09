@@ -59,7 +59,7 @@ public class EyesWatcher
       }
       eyes.setIgnoreCaret(true);
     }
-    eyes.setLogHandler(new FileLogger("/Users/brandonmurray/dev/applitools/bmurmistro/applitools.log",false,true));
+    //eyes.setLogHandler(new FileLogger("/Users/brandonmurray/dev/applitools/bmurmistro/applitools.log",false,true));
   }
 
   @Override
