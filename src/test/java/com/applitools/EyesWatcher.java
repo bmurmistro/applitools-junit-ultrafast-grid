@@ -49,16 +49,8 @@ public class EyesWatcher
       }
       eyes.setBatch(batchInfo);
 
-      // Aggregates tests under the same batch when tests are run in different processes (e.g. split tests in bamboo).
-      //if (buildNumber != null) {
-      //  batch.setId(batch.getName());
-      //}
-
       eyes.setApiKey(APPLITOOLS_KEY);
-      //eyes.setBatch(batch);
-
-      //eyes.setBranchName(localBranchName);
-
+      
       // For local testing or ci runs with master set the branchName and parentBranchNam
       if ((batchId != null && "master".equalsIgnoreCase(localBranchName)) || batchId == null) {
         eyes.setBranchName(
