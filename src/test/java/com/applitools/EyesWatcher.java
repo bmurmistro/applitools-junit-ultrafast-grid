@@ -59,11 +59,7 @@ public class EyesWatcher
 
       //eyes.setBranchName(localBranchName);
 
-      // set the default parent branch to master if the parent branch is not specified
-      //eyes.setParentBranchName(System.getProperty("parentBranchName", "bmurmistro/applitools-teamcity/master"));
-      // For local testing or ci runs with master set the branchName and parentBranchName
-System.out.println("batch ***********" + batchId);
-System.out.println("branch name ***********" + localBranchName);
+      // For local testing or ci runs with master set the branchName and parentBranchNam
       if ((batchId != null && "master".equalsIgnoreCase(localBranchName)) || batchId == null) {
         eyes.setBranchName(
             localBranchName.equalsIgnoreCase("master") ? "bmurmistro/applitools-teamcity/master" : localBranchName);
