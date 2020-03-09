@@ -40,8 +40,8 @@ public class EyesWatcher
 
     if (!eyes.getIsDisabled()) {
       String buildNumber = System.getenv("BUILD_NUMBER");
-      BatchInfo batchInfo = new BatchInfo((buildNumber != null ? " #" + buildNumber : " " + dateFormat.format(new Date())));
-
+      //BatchInfo batchInfo = new BatchInfo((buildNumber != null ? "#" + buildNumber : dateFormat.format(new Date())) + localBranchName);
+      BatchInfo batchInfo = new BatchInfo(System.getenv("APPLITOOLS_BATCH_ID"));
       // If the test runs via TeamCity, set the batch ID accordingly.
       String batchId = System.getenv("APPLITOOLS_BATCH_ID");
       if (batchId != null) {
