@@ -40,17 +40,25 @@ public class EyesWatcher
 
     if (!eyes.getIsDisabled()) {
       String buildNumber = System.getenv("BUILD_NUMBER");
-      batch = new BatchInfo(localBranchName + (buildNumber != null ? " #" + buildNumber : " " + dateFormat.format(new Date())));
+      BatchInfo batchInfo = new BatchInfo(System.getenv("APPLITOOLS_BATCH_NAME"));
+      //BatchInfo batchInfo = new BatchInfo(localBranchName + (buildNumber != null ? " #" + buildNumber : " " + dateFormat.format(new Date())));
+
+      // If the test runs via TeamCity, set the batch ID accordingly.
+      String batchId = System.getenv("APPLITOOLS_BATCH_ID");
+      if (batchId != null) {
+        batchInfo.setId(batchId);
+      }
+      eyes.setBatch(batchInfo);
 
       // Aggregates tests under the same batch when tests are run in different processes (e.g. split tests in bamboo).
-      if (buildNumber != null) {
-        batch.setId(batch.getName());
-      }
+      //if (buildNumber != null) {
+      //  batch.setId(batch.getName());
+      //}
 
       eyes.setApiKey(APPLITOOLS_KEY);
-      eyes.setBatch(batch);
+      //eyes.setBatch(batch);
 
-      eyes.setBranchName(localBranchName);
+      //eyes.setBranchName(localBranchName);
 
       // set the default parent branch to master if the parent branch is not specified
       eyes.setParentBranchName(System.getProperty("parentBranchName", "default"));
