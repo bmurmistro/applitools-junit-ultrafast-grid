@@ -1,1 +1,1 @@
-# applitools-teamcity
+# applitools-junit
