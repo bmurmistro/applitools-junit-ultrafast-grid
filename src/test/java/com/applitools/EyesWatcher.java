@@ -8,9 +8,13 @@ import com.applitools.eyes.BatchInfo;
 import com.applitools.eyes.FileLogger;
 import com.applitools.eyes.RectangleSize;
 import com.applitools.eyes.StdoutLogHandler;
+import com.applitools.eyes.selenium.BrowserType;
 import com.applitools.eyes.selenium.ClassicRunner;
+import com.applitools.eyes.selenium.Configuration;
 import com.applitools.eyes.selenium.Eyes;
 import com.applitools.eyes.selenium.fluent.Target;
+import com.applitools.eyes.visualgrid.model.DeviceName;
+import com.applitools.eyes.visualgrid.services.VisualGridRunner;
 import com.codeborne.selenide.WebDriverRunner;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
@@ -20,9 +24,11 @@ import org.openqa.selenium.WrapsDriver;
 public class EyesWatcher
     extends TestWatcher
 {
-  public static Eyes eyes = new Eyes();
+  public static Eyes eyes;
 
   private String testName;
+  
+  private VisualGridRunner runner;
 
   private static BatchInfo batch;
 
@@ -31,45 +37,47 @@ public class EyesWatcher
   private static final String APPLICATION_NAME = System.getProperty("applicationName", "Branch Test");
   
   private static DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+  
+  private static String localBranchName;
 
   static {
-    String localBranchName = System.getProperty("branchName", System.getenv("GIT_BRANCH_NAME"));
+    localBranchName = System.getProperty("branchName", System.getenv("GIT_BRANCH_NAME"));
     if (localBranchName == null) {
       localBranchName = "default";
     }
-    eyes.setIsDisabled(APPLITOOLS_KEY == null);
+    //eyes.setIsDisabled(APPLITOOLS_KEY == null);
 
-    if (!eyes.getIsDisabled()) {
+    if (APPLITOOLS_KEY != null) {
       String buildNumber = System.getenv("BUILD_NUMBER");
-      BatchInfo batchInfo = new BatchInfo(
+      batch = new BatchInfo(
           (buildNumber != null ? "#" + buildNumber : " " + localBranchName));
       //BatchInfo batchInfo = new BatchInfo(System.getenv("APPLITOOLS_BATCH_ID"));
       // If the test runs via TeamCity, set the batch ID accordingly.
       String batchId = System.getenv("APPLITOOLS_BATCH_ID");
       if (batchId != null) {
-        batchInfo.setId(batchId);
+        batch.setId(batchId);
       }
-      eyes.setBatch(batchInfo);
+      //eyes.setBatch(batchInfo);
 
       // Aggregates tests under the same batch when tests are run in different processes (e.g. split tests in bamboo).
       //if (buildNumber != null) {
       //  batch.setId(batch.getName());
       //}
 
-      eyes.setApiKey(APPLITOOLS_KEY);
+      //eyes.setApiKey(APPLITOOLS_KEY);
       //eyes.setBatch(batch);
 
       //eyes.setBranchName(localBranchName);
 
       // For local testing or ci runs with master set the branchName and parentBranchNam
-      if ((batchId != null && "master".equalsIgnoreCase(localBranchName)) || batchId == null) {
-        eyes.setBranchName(
-            localBranchName.equalsIgnoreCase("master") ? "bmurmistro/applitools-junit/master" : localBranchName);
-        eyes.setParentBranchName("default");
-      }
-      eyes.setIgnoreCaret(true);
+      //if ((batchId != null && "master".equalsIgnoreCase(localBranchName)) || batchId == null) {
+        //eyes.setBranchName(
+        //    localBranchName.equalsIgnoreCase("master") ? "bmurmistro/applitools-junit/master" : localBranchName);
+        //eyes.setParentBranchName("default");
+      //}
+      //eyes.setIgnoreCaret(true);
     }
-    eyes.setLogHandler(new FileLogger("/Users/brandonmurray/dev/applitools/bmurmistro/applitools.log", false, true));
+    //eyes.setLogHandler(new FileLogger("/Users/brandonmurray/dev/applitools/bmurmistro/applitools.log", false, true));
   }
 
   @Override
@@ -79,17 +87,22 @@ public class EyesWatcher
 
   @Override
   protected void finished(Description description) {
-    try {
-      // End visual testing. Validate visual correctness.
-      if (eyes.getIsOpen()) {
-        eyes.close(true);
+    if (eyes != null) {
+      try {
+        // End visual testing. Validate visual correctness.
+        if (eyes.getIsOpen()) {
+          eyes.closeAsync();
+          runner.getAllTestResults(true);
+        }
+      }
+      finally {
+        // Abort test in case of an unexpected error.
+        eyes.abortAsync();
+        eyes = null;
+        runner = null;
       }
     }
-    finally {
-      testName = null;
-      // Abort test in case of an unexpected error.
-      eyes.abortIfNotClosed();
-    }
+    testName = null;
   }
 
   public void eyesCheck(ICheckSettings settings) {
@@ -102,15 +115,79 @@ public class EyesWatcher
    * @param tag or step name of the validation
    */
   public void eyesCheck(String tag, ICheckSettings settings) {
-    if (!eyes.getIsOpen()) {
-      WebDriver remoteDriver = WebDriverRunner.getAndCheckWebDriver();
+      if (eyes == null) {
+        initEyes();
+        WebDriver remoteDriver = WebDriverRunner.getAndCheckWebDriver();
 
-      if (remoteDriver instanceof WrapsDriver) {
-        remoteDriver = ((WrapsDriver) remoteDriver).getWrappedDriver();
+        if (remoteDriver instanceof WrapsDriver) {
+          remoteDriver = ((WrapsDriver) remoteDriver).getWrappedDriver();
+        }
+
+        eyes.open(remoteDriver, APPLICATION_NAME, testName, new RectangleSize(800, 600));
       }
+      eyes.check(tag, settings);
+  }
+  
+  private Configuration getConfiguation() {
+    Configuration sconf = new Configuration();
 
-      eyes.open(remoteDriver, APPLICATION_NAME, testName, new RectangleSize(800, 600));
+
+    // Set a batch name so all the different browser and mobile combinations are
+    // part of the same batch
+    sconf.setBatch(batch);
+
+    // Add Chrome browsers with different Viewports
+    sconf.addBrowser(800, 600, BrowserType.CHROME);
+    sconf.addBrowser(700, 500, BrowserType.CHROME);
+    sconf.addBrowser(1200, 800, BrowserType.CHROME);
+    sconf.addBrowser(1600, 1200, BrowserType.CHROME);
+    sconf.addBrowser(700, 800, BrowserType.CHROME);
+    sconf.addBrowser(800, 700, BrowserType.CHROME);
+    sconf.addBrowser(1200, 900, BrowserType.CHROME);
+    sconf.addBrowser(1600, 1000, BrowserType.CHROME);
+
+    // Add Firefox browser with different Viewports
+    sconf.addBrowser(800, 600, BrowserType.FIREFOX);
+    sconf.addBrowser(700, 500, BrowserType.FIREFOX);
+    sconf.addBrowser(1200, 800, BrowserType.FIREFOX);
+    sconf.addBrowser(1600, 1200, BrowserType.FIREFOX);
+    sconf.addBrowser(700, 800, BrowserType.FIREFOX);
+    sconf.addBrowser(800, 700, BrowserType.FIREFOX);
+    sconf.addBrowser(1200, 900, BrowserType.FIREFOX);
+    sconf.addBrowser(1600, 1000, BrowserType.FIREFOX);
+
+    sconf.addBrowser(1600, 1200, BrowserType.IE_11);
+    sconf.addBrowser(800, 600, BrowserType.IE_10);
+
+    sconf.addBrowser(800, 600, BrowserType.EDGE_CHROMIUM);
+
+    sconf.addBrowser(800, 600, BrowserType.SAFARI);
+    sconf.addBrowser(800, 600, BrowserType.SAFARI_TWO_VERSIONS_BACK);
+
+    // Add iPhone 4 device emulation
+    sconf.addDeviceEmulation(DeviceName.iPad_Mini);
+    
+    return sconf;
+  }
+  
+  private void initEyes() {
+    runner = new VisualGridRunner(10);
+
+    // Initialize the eyes SDK
+    eyes = new Eyes(runner);
+    eyes.setLogHandler(new StdoutLogHandler(true));
+    eyes.setConfiguration(getConfiguation());
+    eyes.setApiKey(APPLITOOLS_KEY);
+    //eyes.setBatch(batch);
+
+    //eyes.setBranchName(localBranchName);
+
+    // For local testing or ci runs with master set the branchName and parentBranchNam
+    if ((batch.getId() != null && "master".equalsIgnoreCase(localBranchName)) || batch.getId() == null) {
+      eyes.setBranchName(
+          localBranchName.equalsIgnoreCase("master") ? "bmurmistro/applitools-junit/master" : localBranchName);
+      eyes.setParentBranchName("default");
     }
-    eyes.check(tag, settings);
+    eyes.setIgnoreCaret(true);
   }
 }
