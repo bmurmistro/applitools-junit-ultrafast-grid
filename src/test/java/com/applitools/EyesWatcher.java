@@ -138,34 +138,9 @@ public class EyesWatcher
 
     // Add Chrome browsers with different Viewports
     sconf.addBrowser(800, 600, BrowserType.CHROME);
-    sconf.addBrowser(700, 500, BrowserType.CHROME);
-    sconf.addBrowser(1200, 800, BrowserType.CHROME);
-    sconf.addBrowser(1600, 1200, BrowserType.CHROME);
-    sconf.addBrowser(700, 800, BrowserType.CHROME);
-    sconf.addBrowser(800, 700, BrowserType.CHROME);
-    sconf.addBrowser(1200, 900, BrowserType.CHROME);
-    sconf.addBrowser(1600, 1000, BrowserType.CHROME);
 
     // Add Firefox browser with different Viewports
     sconf.addBrowser(800, 600, BrowserType.FIREFOX);
-    sconf.addBrowser(700, 500, BrowserType.FIREFOX);
-    sconf.addBrowser(1200, 800, BrowserType.FIREFOX);
-    sconf.addBrowser(1600, 1200, BrowserType.FIREFOX);
-    sconf.addBrowser(700, 800, BrowserType.FIREFOX);
-    sconf.addBrowser(800, 700, BrowserType.FIREFOX);
-    sconf.addBrowser(1200, 900, BrowserType.FIREFOX);
-    sconf.addBrowser(1600, 1000, BrowserType.FIREFOX);
-
-    sconf.addBrowser(1600, 1200, BrowserType.IE_11);
-    sconf.addBrowser(800, 600, BrowserType.IE_10);
-
-    sconf.addBrowser(800, 600, BrowserType.EDGE_CHROMIUM);
-
-    sconf.addBrowser(800, 600, BrowserType.SAFARI);
-    sconf.addBrowser(800, 600, BrowserType.SAFARI_TWO_VERSIONS_BACK);
-
-    // Add iPhone 4 device emulation
-    sconf.addDeviceEmulation(DeviceName.iPad_Mini);
     
     return sconf;
   }
@@ -183,11 +158,11 @@ public class EyesWatcher
     //eyes.setBranchName(localBranchName);
 
     // For local testing or ci runs with master set the branchName and parentBranchNam
-    if ((batch.getId() != null && "master".equalsIgnoreCase(localBranchName)) || batch.getId() == null) {
+    /*if ((batch.getId() != null && "master".equalsIgnoreCase(localBranchName)) || batch.getId() == null) {
       eyes.setBranchName(
           localBranchName.equalsIgnoreCase("master") ? "bmurmistro/applitools-junit/master" : localBranchName);
       eyes.setParentBranchName("default");
-    }
+    }*/
     eyes.setIgnoreCaret(true);
   }
 }

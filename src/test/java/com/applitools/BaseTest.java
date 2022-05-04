@@ -1,11 +1,14 @@
 package com.applitools;
 
+import com.applitools.eyes.BatchInfo;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.WebDriverRunner;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.openqa.selenium.WebDriver;
+
 
 public class BaseTest
 {
@@ -27,4 +30,5 @@ public class BaseTest
   public static void tearDown() {
     driver.quit();
   }
+
 }
