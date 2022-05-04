@@ -92,7 +92,7 @@ public class EyesWatcher
         // End visual testing. Validate visual correctness.
         if (eyes.getIsOpen()) {
           eyes.closeAsync();
-          runner.getAllTestResults(true);
+          runner.getAllTestResults(false);
         }
       }
       finally {
