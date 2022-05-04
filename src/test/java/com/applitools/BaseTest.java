@@ -22,7 +22,7 @@ public class BaseTest
     //ChromeOptions options = new ChromeOptions();
     //options.addArguments("--headless");
     Configuration.browser = "chrome";
-    //Configuration.headless = true;
+    Configuration.headless = true;
     driver = WebDriverRunner.getAndCheckWebDriver();
   }
 
