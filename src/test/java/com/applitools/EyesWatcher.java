@@ -57,7 +57,7 @@ public class EyesWatcher
       if (batchId != null) {
         batch.setId(batchId);
       }
-      eyes.setBatch(batch);
+      //eyes.setBatch(batch);
 
       // Aggregates tests under the same batch when tests are run in different processes (e.g. split tests in bamboo).
       //if (buildNumber != null) {
@@ -153,7 +153,7 @@ public class EyesWatcher
     eyes.setLogHandler(new StdoutLogHandler(true));
     eyes.setConfiguration(getConfiguation());
     eyes.setApiKey(APPLITOOLS_KEY);
-    //eyes.setBatch(batch);
+    eyes.setBatch(batch);
 
     //eyes.setBranchName(localBranchName);
 
