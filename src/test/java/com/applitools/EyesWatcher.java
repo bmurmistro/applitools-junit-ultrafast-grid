@@ -41,16 +41,17 @@ public class EyesWatcher
   private static String localBranchName;
 
   static {
-    localBranchName = System.getProperty("branchName", System.getenv("GIT_BRANCH_NAME"));
+
+    /*localBranchName = System.getProperty("branchName", System.getenv("GIT_BRANCH_NAME"));
     if (localBranchName == null) {
       localBranchName = "default";
-    }
+    }*/
     //eyes.setIsDisabled(APPLITOOLS_KEY == null);
 
     if (APPLITOOLS_KEY != null) {
       String buildNumber = System.getenv("BUILD_NUMBER");
       batch = new BatchInfo(
-          (buildNumber != null ? "#" + buildNumber : " " + localBranchName));
+          (buildNumber != null ? "#" + buildNumber : "Github Demo"));
       //BatchInfo batchInfo = new BatchInfo(System.getenv("APPLITOOLS_BATCH_ID"));
       // If the test runs via TeamCity, set the batch ID accordingly.
       String batchId = System.getenv("APPLITOOLS_BATCH_ID");
