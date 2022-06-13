@@ -10,7 +10,7 @@ import static com.codeborne.selenide.Selenide.open;
 public class HelloWorldTest extends BaseTest
 {
   @Test
-  public void testHello() {
+  public void testHello(){
     open("https://applitools.com/helloworld");
 
     // Visual validation point #1.
