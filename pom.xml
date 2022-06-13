@@ -20,7 +20,7 @@
     <dependency>
       <groupId>com.applitools</groupId>
       <artifactId>eyes-selenium-java3</artifactId>
-      <version>3.196.0</version>
+      <version>3.160.2</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -31,7 +31,7 @@
     <dependency>
       <groupId>com.codeborne</groupId>
       <artifactId>selenide</artifactId>
-      <version>6.4.0</version>
+      <version>5.7.0</version>
     </dependency>
   </dependencies>
 </project>
