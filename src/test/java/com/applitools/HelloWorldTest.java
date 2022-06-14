@@ -12,12 +12,11 @@ public class HelloWorldTest extends BaseTest
   @Test
   public void testHello() {
     open("https://applitools.com/helloworld");
-
     // Visual validation point #1.
     eyesWatcher.eyesCheck("Hello!", Target.window());
 
     // Click the "Click me!" button.
-    //$(By.tagName("button")).click();
+    $(By.tagName("button")).click();
 
     eyesWatcher.eyesCheck("Hello Thumbs up!", Target.window());
   }
