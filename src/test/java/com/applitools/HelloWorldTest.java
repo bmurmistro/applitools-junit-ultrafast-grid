@@ -14,7 +14,6 @@ public class HelloWorldTest extends BaseTest
     open("https://applitools.com/helloworld");
 
     // Visual validation point #1.
-    $(By.tagName("button")).click();
     eyesWatcher.eyesCheck("Hello!", Target.window());
 
     // Click the "Click me!" button.
