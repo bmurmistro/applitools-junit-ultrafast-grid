@@ -18,6 +18,6 @@ public class HelloWorldTest extends BaseTest
     // Click the "Click me!" button.
     //$(By.tagName("button")).click();
 
-    eyesWatcher.eyesCheck("Hello Thumbs up!", Target.window());
+    //eyesWatcher.eyesCheck("Hello Thumbs up!", Target.window());
   }
 }
